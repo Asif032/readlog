@@ -5,14 +5,14 @@ export interface CreateAuthorDto {
   name: string;
   date_of_birth?: Date;
   date_of_death?: Date;
-  description?: Date;
+  description?: string;
 }
 
 export interface UpdateAuthorDto {
   name?: string;
   date_of_birth?: Date;
   date_of_death?: Date;
-  description?: Date;
+  description?: string;
 }
 
 export interface AuthorListOptions {

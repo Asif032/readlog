@@ -6,7 +6,7 @@ import { UserRole } from '../../database/types';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  createUser = async (req: Request, res: Response): Promise<void> => {
+  create = async (req: Request, res: Response): Promise<void> => {
     try {
       const userData: CreateUserDto = req.body;
 
@@ -18,7 +18,7 @@ export class UserController {
         return;
       }
 
-      const user = await this.userService.createUser(userData);
+      const user = await this.userService.create(userData);
       const userResponse = this.userService.excludePassword(user);
 
       res.status(201).json({
@@ -32,10 +32,10 @@ export class UserController {
     }
   };
 
-  getUserById = async (req: Request, res: Response): Promise<void> => {
+  getById = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
-      const user = await this.userService.getUserById(id);
+      const user = await this.userService.getById(id);
       const userResponse = this.userService.excludePassword(user);
 
       res.json({
@@ -48,13 +48,13 @@ export class UserController {
     }
   };
 
-  getAllUsers = async (req: Request, res: Response): Promise<void> => {
+  getAll = async (req: Request, res: Response): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 50;
       const role = req.query.role as UserRole;
 
-      const result = await this.userService.getAllUsers({ page, limit, role });
+      const result = await this.userService.getAll({ page, limit, role });
 
       // Exclude passwords from all users
       const usersWithoutPasswords = result.users.map(user =>
@@ -74,12 +74,12 @@ export class UserController {
     }
   };
 
-  updateUser = async (req: Request, res: Response): Promise<void> => {
+  update = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       const userData: UpdateUserDto = req.body;
 
-      const user = await this.userService.updateUser(id, userData);
+      const user = await this.userService.update(id, userData);
       const userResponse = this.userService.excludePassword(user);
 
       res.json({
@@ -117,12 +117,12 @@ export class UserController {
     }
   };
 
-  deleteUser = async (req: Request, res: Response): Promise<void> => {
+  delete = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       const hard = req.query.hard === 'true';
 
-      await this.userService.deleteUser(id, hard);
+      await this.userService.delete(id, hard);
 
       res.json({
         message: hard ? 'User deleted permanently' : 'User deleted successfully',
@@ -134,10 +134,10 @@ export class UserController {
     }
   };
 
-  toggleUserStatus = async (req: Request, res: Response): Promise<void> => {
+  toggleActiveStatus = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
-      const user = await this.userService.toggleUserStatus(id);
+      const user = await this.userService.toggleActiveStatus(id);
       const userResponse = this.userService.excludePassword(user);
 
       res.json({
@@ -151,7 +151,7 @@ export class UserController {
     }
   };
 
-  loginUser = async (req: Request, res: Response): Promise<void> => {
+  login = async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, password } = req.body;
 

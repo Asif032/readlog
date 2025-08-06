@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { UserRepository,  } from './repository';
+import { UserRepository  } from './repository';
 import { UserInsert, UserUpdate, UserSelect } from '../../database/types';
 import { CreateUserDto,UpdateUserDto, UserListOptions, PaginatedUsers } from './dto';
 
@@ -7,22 +7,16 @@ import { CreateUserDto,UpdateUserDto, UserListOptions, PaginatedUsers } from './
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async createUser(userData: CreateUserDto): Promise<UserSelect> {
-    // Check if user already exists
+  async create(userData: CreateUserDto): Promise<UserSelect> {
     const existingUser = await this.userRepository.findByEmail(userData.email);
     if (existingUser) {
       throw new Error('User with this email already exists');
     }
 
-    // Hash password
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
-    // Generate UUID for user ID
-    const userId = crypto.randomUUID();
-
     const userInsert: UserInsert = {
-      id: userId,
       email: userData.email,
       name: userData.name,
       password: hashedPassword,
@@ -35,7 +29,7 @@ export class UserService {
     return await this.userRepository.create(userInsert);
   }
 
-  async getUserById(id: string): Promise<UserSelect> {
+  async getById(id: string): Promise<UserSelect> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new Error('User not found');
@@ -43,7 +37,7 @@ export class UserService {
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<UserSelect> {
+  async getByEmail(email: string): Promise<UserSelect> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new Error('User not found');
@@ -51,7 +45,7 @@ export class UserService {
     return user;
   }
 
-  async getAllUsers(options: UserListOptions = {}): Promise<PaginatedUsers> {
+  async getAll(options: UserListOptions = {}): Promise<PaginatedUsers> {
     const { page = 1, limit = 50, role } = options;
     const offset = (page - 1) * limit;
 
@@ -69,7 +63,7 @@ export class UserService {
     };
   }
 
-  async updateUser(id: string, userData: UpdateUserDto): Promise<UserSelect> {
+  async update(id: string, userData: UpdateUserDto): Promise<UserSelect> {
     const existingUser = await this.userRepository.findById(id);
     if (!existingUser) {
       throw new Error('User not found');
@@ -109,7 +103,7 @@ export class UserService {
     await this.userRepository.update(id, { password: hashedNewPassword });
   }
 
-  async deleteUser(id: string, hard: boolean = false): Promise<void> {
+  async delete(id: string, hard: boolean = false): Promise<void> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new Error('User not found');
@@ -122,7 +116,7 @@ export class UserService {
     }
   }
 
-  async toggleUserStatus(id: string): Promise<UserSelect> {
+  async toggleActiveStatus(id: string): Promise<UserSelect> {
     const user = await this.userRepository.toggleActiveStatus(id);
     if (!user) {
       throw new Error('User not found');
@@ -151,7 +145,6 @@ export class UserService {
     return user;
   }
 
-  // Helper method to exclude password from user data
   excludePassword(user: UserSelect): Omit<UserSelect, 'password'> {
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;

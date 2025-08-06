@@ -27,7 +27,7 @@ export interface BaseEntity {
 }
 
 export interface User extends BaseEntity {
-  id: string;
+  id: Generated<string>;
   email: string;
   name: string;
   password: string;
@@ -53,7 +53,7 @@ export interface Book extends BaseEntity {
 }
 
 export interface Author extends BaseEntity {
-  id: string;
+  id: Generated<string>;
   name: string;
   date_of_birth: Timestamp | null;
   date_of_death: Timestamp | null;
