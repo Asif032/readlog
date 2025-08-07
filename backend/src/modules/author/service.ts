@@ -1,3 +1,4 @@
+import { DB } from "../../database/connection";
 import { AuthorRepository } from "./repository";
 import { AuthorInsert, AuthorUpdate, AuthorSelect } from '../../database/types';
 import { CreateAuthorDto,UpdateAuthorDto, AuthorListOptions, PaginatedAuthors } from './dto';
@@ -8,8 +9,18 @@ export class AuthorService {
   async create(authorData: CreateAuthorDto): Promise<void> {
     const authorInsert: AuthorInsert = {
       ...authorData
-    }
+    };
     return await this.authorRepository.create(authorInsert);
+  }
+
+  async createMultiple(authors: CreateAuthorDto[], trx?: DB): Promise<string[]> {
+    const authorInserts: AuthorInsert[] = authors.map((author) => ({
+      name: author.name,
+      date_of_birth: author.date_of_birth,
+      date_of_death: author.date_of_death,
+      description: author.description,
+    }));
+    return await this.authorRepository.createMultiple(authorInserts, trx);
   }
 
   async get(id: string): Promise<AuthorSelect> {

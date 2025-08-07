@@ -1,11 +1,11 @@
-import { BookSelect } from "../../database/types";
+import { BookSelect, Genre } from "../../database/types";
 import { CreateAuthorDto } from "../author/dto";
 
 export interface CreateBookDto {
   title: string;
   edition?: number;
   language: string;
-  genre: string;
+  genre: Genre;
   pages: number;
   tags?: string[];
   isbn?: string;
@@ -20,7 +20,7 @@ export interface UpdateBookDto {
   title?: string;
   edition?: number;
   language?: string;
-  genre?: string;
+  genre?: Genre;
   pages?: number;
   tags?: string[];
   isbn?: string;

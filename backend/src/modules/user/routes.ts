@@ -1,12 +1,9 @@
 import { Router } from 'express';
+import { container } from '../../container';
 import { UserController } from './controller';
 import { UserService } from './service';
-import { UserRepository } from './repository';
-import { db } from '../../database/connection';
 
-const userRepository = new UserRepository(db);
-const userService = new UserService(userRepository);
-const userController = new UserController(userService);
+const userController = new UserController(container.resolve<UserService>('userService'));
 
 const router = Router();
 

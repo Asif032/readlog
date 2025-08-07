@@ -1,12 +1,9 @@
 import { Router } from 'express';
+import { container } from '../../container';
 import { AuthorController } from './controller';
 import { AuthorService } from './service';
-import { AuthorRepository } from './repository';
-import { db } from '../../database/connection';
 
-const authorRepository = new AuthorRepository(db);
-const authorService = new AuthorService(authorRepository);
-const authorController = new AuthorController(authorService);
+const authorController = new AuthorController(container.resolve<AuthorService>('authorService'));
 
 const router = Router();
 

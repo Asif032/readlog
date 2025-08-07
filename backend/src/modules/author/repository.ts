@@ -11,6 +11,18 @@ export class AuthorRepository {
       .execute();
   }
 
+  async createMultiple(authors: AuthorInsert[], trx?: DB): Promise<string[]> {
+    const executor = trx ?? this.db;
+    const inserted = await executor
+      .insertInto('authors')
+      .values(authors)
+      .returning('id')
+      .execute();
+
+    return inserted.map(row => row.id);
+  }
+
+
   async findById(id: string): Promise<AuthorSelect | undefined> {
     return await this.db
       .selectFrom('authors')

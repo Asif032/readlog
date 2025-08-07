@@ -5,49 +5,23 @@ import { CreateBookDto, UpdateBookDto, PaginatedBooks } from './dto';
 export class BookRepository {
   constructor(private db: DB) {}
 
-  async create(bookData: BookInsert): Promise<void> {
-
-  const [book] = await this.db
-    .insertInto('books')
-    .values(bookData)
-    .returning('id')
-    .execute();
-
-  const bookId = book.id;
-
-  for (const authorDto of authors) {
-    const existing = await this.db
-      .selectFrom('authors')
-      .selectAll()
-      .where('name', '=', authorDto.name)
-      .executeTakeFirst();
-
-    let authorId: string;
-
-    if (existing) {
-      authorId = existing.id;
-    } else {
-      const [inserted] = await this.db
-        .insertInto('authors')
-        .values(authorDto)
-        .returning('id')
-        .execute();
-
-      authorId = inserted.id;
-    }
-
-    await this.db
-      .insertInto('book_authors')
-      .values({
-        book_id: bookId,
-        author_id: authorId,
-      })
+  async create(bookData: BookInsert, trx?: DB): Promise<bigint> {
+    const executor = trx ?? this.db;
+    const [res] =  await executor
+      .insertInto('books')
+      .values(bookData)
+      .returning('id')
       .execute();
-    }
+
+    return res.id;
   }
 
-  async createBookAuthor(bookAuthorData: BookAuthorInsert): Promise<void> {
-    
+  async createBookAuthors(bookAuthors: BookAuthorInsert[], trx?: DB): Promise<void> {
+    const executor = trx ?? this.db;
+    await executor
+      .insertInto('book_authors')
+      .values(bookAuthors)
+      .execute()
   }
 
   async findById(id: bigint): Promise<BookSelect | undefined> {
@@ -60,6 +34,15 @@ export class BookRepository {
   }
 
   async findByTitle(title: string): Promise<BookSelect[] | undefined> {
+    return await this.db
+      .selectFrom('books')
+      .selectAll()
+      .where('title', '=', title)
+      .where('deleted_at', 'is', null)
+      .execute();
+  }
+
+  async searchByTitle(title: string): Promise<BookSelect[] | undefined> {
     return await this.db
       .selectFrom('books')
       .selectAll()
@@ -107,4 +90,5 @@ export class BookRepository {
       .where('id', '=', id)
       .execute()
   }
+  
 }

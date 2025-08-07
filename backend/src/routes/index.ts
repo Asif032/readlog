@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { userRoutes } from "../modules/user/routes";
 import { authorRoutes } from "../modules/author/routes";
+import { bookRoutes } from "../modules/book/routes";
 
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from '../config/swagger';
@@ -14,6 +15,7 @@ const API_VERSION = '/api/v1';
 
 router.use(`${API_VERSION}/users`, userRoutes);
 router.use(`${API_VERSION}/authors`, authorRoutes);
+router.use(`${API_VERSION}/books`, bookRoutes);
 
 router.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
