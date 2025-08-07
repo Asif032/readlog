@@ -10,16 +10,14 @@ interface ErrorResponse {
   path: string;
 }
 
-export class GlobalExceptionHandler {
+export class GlobalErrorHandler {
   
-  // Main error handler - routes to specific handlers
   static handle(error: Error, req: Request, res: Response, next: NextFunction): Response {
     console.error('Error caught by global handler:', error);
 
     const timestamp = new Date().toISOString();
     const path = req.originalUrl;
 
-    // Route to specific handler based on error type
     if (error instanceof ValidationError) {
       return this.handleValidationError(error, req, res, timestamp, path);
     }
@@ -44,7 +42,6 @@ export class GlobalExceptionHandler {
       return this.handleAppError(error, req, res, timestamp, path);
     }
     
-    // Handle specific error names (for third-party libraries)
     if (error.name === 'NoResultError') {
       return this.handleKyselyNoResultError(error, req, res, timestamp, path);
     }
@@ -61,16 +58,13 @@ export class GlobalExceptionHandler {
       return this.handleSyntaxError(error, req, res, timestamp, path);
     }
     
-    // Handle PostgreSQL errors
     if ('code' in error) {
       return this.handlePostgreSQLError(error as any, req, res, timestamp, path);
     }
     
-    // Default handler for unhandled errors
     return this.handleInternalServerError(error, req, res, timestamp, path);
   }
 
-  // @ExceptionHandler(ValidationError.class) equivalent
   private static handleValidationError(
     error: ValidationError, 
     req: Request, 
@@ -92,7 +86,6 @@ export class GlobalExceptionHandler {
     return res.status(400).json(errorResponse);
   }
 
-  // @ExceptionHandler(NotFoundError.class) equivalent
   private static handleNotFoundError(
     error: NotFoundError, 
     req: Request, 
@@ -110,7 +103,6 @@ export class GlobalExceptionHandler {
     return res.status(404).json(errorResponse);
   }
 
-  // @ExceptionHandler(ConflictError.class) equivalent
   private static handleConflictError(
     error: ConflictError, 
     req: Request, 
@@ -128,7 +120,6 @@ export class GlobalExceptionHandler {
     return res.status(409).json(errorResponse);
   }
 
-  // @ExceptionHandler(UnauthorizedError.class) equivalent
   private static handleUnauthorizedError(
     error: UnauthorizedError, 
     req: Request, 
@@ -146,7 +137,6 @@ export class GlobalExceptionHandler {
     return res.status(401).json(errorResponse);
   }
 
-  // @ExceptionHandler(DatabaseError.class) equivalent
   private static handleDatabaseError(
     error: DatabaseError, 
     req: Request, 
@@ -170,7 +160,6 @@ export class GlobalExceptionHandler {
     return res.status(500).json(errorResponse);
   }
 
-  // @ExceptionHandler(AppError.class) equivalent - Generic app error handler
   private static handleAppError(
     error: AppError, 
     req: Request, 
@@ -192,7 +181,6 @@ export class GlobalExceptionHandler {
     return res.status(error.statusCode).json(errorResponse);
   }
 
-  // Handle Kysely NoResultError
   private static handleKyselyNoResultError(
     error: Error, 
     req: Request, 
@@ -210,7 +198,6 @@ export class GlobalExceptionHandler {
     return res.status(404).json(errorResponse);
   }
 
-  // @ExceptionHandler(JsonWebTokenError.class) equivalent
   private static handleJWTError(
     error: Error, 
     req: Request, 
@@ -228,7 +215,6 @@ export class GlobalExceptionHandler {
     return res.status(401).json(errorResponse);
   }
 
-  // Handle JWT token expired
   private static handleTokenExpiredError(
     error: Error, 
     req: Request, 
@@ -246,7 +232,6 @@ export class GlobalExceptionHandler {
     return res.status(401).json(errorResponse);
   }
 
-  // Handle JSON syntax errors
   private static handleSyntaxError(
     error: SyntaxError, 
     req: Request, 
@@ -264,8 +249,7 @@ export class GlobalExceptionHandler {
     return res.status(400).json(errorResponse);
   }
 
-  // Handle PostgreSQL specific errors
-  private static handlePostgreSQLError(
+   private static handlePostgreSQLError(
     error: any, 
     req: Request, 
     res: Response, 
@@ -275,23 +259,38 @@ export class GlobalExceptionHandler {
     let statusCode = 500;
     let message = 'Database error';
 
-    // PostgreSQL error codes
     switch (error.code) {
-      case '23505': // Unique violation
+      case '23505': 
         statusCode = 409;
         message = 'Resource already exists';
         break;
-      case '23502': // Not null violation
+      case '23502': 
         statusCode = 400;
         message = 'Required field is missing';
         break;
-      case '23503': // Foreign key violation
+      case '23503': 
         statusCode = 400;
         message = 'Referenced resource does not exist';
         break;
-      case '42P01': // Table does not exist
+      case '42P01': 
         statusCode = 500;
         message = 'Database configuration error';
+        break;
+      case '22001': 
+        statusCode = 400;
+        message = 'Data too long for field';
+        break;
+      case '22P02': 
+        statusCode = 400;
+        message = 'Invalid data format';
+        break;
+      case '23514': 
+        statusCode = 400;
+        message = 'Data violates check constraint';
+        break;
+      case '08006': 
+        statusCode = 500;
+        message = 'Database connection failed';
         break;
       default:
         message = process.env.NODE_ENV === 'production' 
@@ -312,13 +311,15 @@ export class GlobalExceptionHandler {
         code: error.code,
         detail: error.detail,
         hint: error.hint,
+        table: error.table,
+        column: error.column,
+        constraint: error.constraint,
       };
     }
 
     return res.status(statusCode).json(errorResponse);
   }
 
-  // @ExceptionHandler(Exception.class) equivalent - Default handler
   private static handleInternalServerError(
     error: Error, 
     req: Request, 
@@ -343,10 +344,8 @@ export class GlobalExceptionHandler {
   }
 }
 
-// Export the main handler function for Express middleware
-export const globalErrorHandler = GlobalExceptionHandler.handle;
+export const globalErrorHandler = GlobalErrorHandler.handle;
 
-// Async error wrapper remains the same
 export const asyncHandler = (fn: Function) => {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);

@@ -4,7 +4,6 @@ import { UserService } from './service';
 import { UserRepository } from './repository';
 import { db } from '../../database/connection';
 
-// Create instances
 const userRepository = new UserRepository(db);
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);

@@ -24,6 +24,15 @@ export class AuthorRepository {
     return await this.db
       .selectFrom('authors')
       .selectAll()
+      .where('name', '=', name)
+      .where('deleted_at', 'is', null)
+      .execute();
+  }
+
+  async searchByName(name: string): Promise<AuthorSelect[] | undefined> {
+    return await this.db
+      .selectFrom('authors')
+      .selectAll()
       .where('name', 'like', `%${name}%`)
       .where('deleted_at', 'is', null)
       .execute();

@@ -1,7 +1,11 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { userRoutes } from "../modules/user/routes";
+import { authorRoutes } from "../modules/author/routes";
+
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from '../config/swagger';
+
+import { NotFoundError } from '../errors/custom-errors';
 
 
 const router = Router();
@@ -9,8 +13,8 @@ const router = Router();
 const API_VERSION = '/api/v1';
 
 router.use(`${API_VERSION}/users`, userRoutes);
+router.use(`${API_VERSION}/authors`, authorRoutes);
 
-// Health check endpoint
 router.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'OK',
@@ -19,7 +23,6 @@ router.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// Swagger documentation
 router.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
@@ -29,25 +32,14 @@ router.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   },
 }));
 
-// Swagger JSON endpoint
 router.get('/api/docs.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });
 
-// 404 handler
-router.use('*', (req: Request, res: Response) => {
-  res.status(404).json({
-    error: 'Route not found',
-  });
+router.use('*', (req: Request, res: Response, next: NextFunction) => {
+    next(new NotFoundError(`Route ${req.method} ${req.originalUrl} not found`));
 });
 
-// Error handler
-router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({
-    error: 'Something went wrong!',
-  });
-});
 
 export { router as apiRoutes };

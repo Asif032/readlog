@@ -27,6 +27,13 @@ export class AuthorService {
     return await this.authorRepository.findByName(name);
   }
 
+  async searchByName(name: string) {
+     if (!name || name.trim() === '') {
+      throw new Error('Name cannot be empty');
+    }
+    return await this.authorRepository.searchByName(name);
+  }
+
   async getAll(): Promise<AuthorSelect[]> {
     return await this.authorRepository.findAll();
   }
