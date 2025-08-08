@@ -52,7 +52,8 @@ export class ReadController {
 
   countReadersByBookId = async (req: Request, res: Response): Promise<void> => {
     const { bookId } = req.params;
-    const count = await this.readService.countReadersByBookId(BigInt(bookId));
+    const status = req.query.status as ReadStatus | undefined;
+    const count = await this.readService.countReadersByBookId(BigInt(bookId), status);
     res.json(success({ count }));
   }
 }

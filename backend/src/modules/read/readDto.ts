@@ -8,6 +8,7 @@ export interface CreateReadDto {
 
 export interface UpdateReadDto {
   status?: ReadStatus;
+  last_page?: number;
 }
 
 export interface ReadListOptions {

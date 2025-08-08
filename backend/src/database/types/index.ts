@@ -65,6 +65,7 @@ export interface Read extends BaseEntity {
   reader_id: string;
   book_id: bigint;
   status: ReadStatus;
+  last_page: Generated<number>;
 }
 
 export interface Note extends BaseEntity {

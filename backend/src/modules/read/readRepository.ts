@@ -74,12 +74,17 @@ export class ReadRepository {
     return await query.execute();
   }
 
-  async countReadersByBookId(bookId: bigint): Promise<number> {
-    const result = await this.db
+  async countReadersByBookId(bookId: bigint, status?: ReadStatus): Promise<number> {
+    let query = this.db
       .selectFrom('reads')
       .select(this.db.fn.count('reads.id').as('count'))
-      .where('reads.book_id', '=', bookId)
-      .executeTakeFirst();
+      .where('reads.book_id', '=', bookId);
+
+    if (status) {
+      query = query.where('reads.status', '=', status);
+    }
+
+    const result = await query.executeTakeFirst();
 
     return Number(result?.count) || 0;
   }

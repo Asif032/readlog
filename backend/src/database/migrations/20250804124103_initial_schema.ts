@@ -87,6 +87,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('reader_id', 'uuid', (col) => col.references('users.id').onDelete('cascade').notNull())
     .addColumn('book_id', 'bigint', (col) => col.references('books.id').onDelete('cascade').notNull())
     .addColumn('status', sql`read_status`, (col) => col.notNull())
+    .addColumn('last_page', 'integer', (col) => col.notNull().defaultTo(0))
     .addColumn('created_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
     .addColumn('updated_at', 'timestamp', (col) => col.defaultTo(sql`now()`).notNull())
     .addColumn('deleted_at', 'timestamp')

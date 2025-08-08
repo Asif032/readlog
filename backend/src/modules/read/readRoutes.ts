@@ -192,6 +192,13 @@ router.get('/user/:userId', readController.getBooksByUserId);
  *           type: string
  *         required: true
  *         description: The book id
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [UPCOMING, READING, COMPLETED, DROPPED]
+ *         required: false
+ *         description: The read status
  *     responses:
  *       200:
  *         description: The number of readers

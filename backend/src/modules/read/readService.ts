@@ -38,7 +38,7 @@ export class ReadService {
     return this.readRepository.findBooksByUserId(userId, status);
   }
 
-  async countReadersByBookId(bookId: bigint): Promise<number> {
-    return this.readRepository.countReadersByBookId(bookId);
+  async countReadersByBookId(bookId: bigint, status?: ReadStatus): Promise<number> {
+    return this.readRepository.countReadersByBookId(bookId, status);
   }
 }
