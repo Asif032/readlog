@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import { container } from '../../container';
 import { BookController } from './controller';
-import { BookService } from './service';
 
-const bookController = new BookController(container.resolve<BookService>('bookService'));
+const bookController = container.resolve<BookController>('bookController');
 
 const router = Router();
 

@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import { container } from '../../container';
 import { UserController } from './controller';
-import { UserService } from './service';
 
-const userController = new UserController(container.resolve<UserService>('userService'));
+const userController = container.resolve<UserController>('userController');
 
 const router = Router();
 

@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import { container } from '../../container';
 import { AuthorController } from './controller';
-import { AuthorService } from './service';
 
-const authorController = new AuthorController(container.resolve<AuthorService>('authorService'));
+const authorController = container.resolve<AuthorController>('authorController');
 
 const router = Router();
 
