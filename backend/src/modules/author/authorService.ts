@@ -1,7 +1,7 @@
 import { DB } from "../../database/connection";
-import { AuthorRepository } from "./repository";
+import { AuthorRepository } from "./authorRepository";
 import { AuthorInsert, AuthorUpdate, AuthorSelect } from '../../database/types';
-import { CreateAuthorDto,UpdateAuthorDto, AuthorListOptions, PaginatedAuthors } from './dto';
+import { CreateAuthorDto,UpdateAuthorDto, AuthorListOptions, PaginatedAuthors } from './authorDto';
 
 export class AuthorService {
   constructor(private authorRepository: AuthorRepository) {}

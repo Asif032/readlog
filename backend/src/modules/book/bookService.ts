@@ -1,8 +1,8 @@
 import { DB } from "../../database/connection";
-import { BookRepository } from "./repository";
-import { AuthorService } from "../author/service";
+import { BookRepository } from "./bookRepository";
+import { AuthorService } from "../author/authorService";
 import { BookInsert, BookUpdate, BookSelect, BookAuthorInsert } from '../../database/types';
-import { CreateBookDto,UpdateBookDto, BookListOptions, PaginatedBooks } from './dto';
+import { CreateBookDto,UpdateBookDto, BookListOptions, PaginatedBooks } from './bookDto';
 
 export class BookService {
   constructor(

@@ -1,6 +1,6 @@
 import { DB } from '../../database/connection';
 import { BookInsert, BookUpdate, BookSelect, BookAuthorInsert, Book } from '../../database/types';
-import { CreateBookDto, UpdateBookDto, PaginatedBooks } from './dto';
+import { CreateBookDto, UpdateBookDto, PaginatedBooks } from './bookDto';
 
 export class BookRepository {
   constructor(private db: DB) {}

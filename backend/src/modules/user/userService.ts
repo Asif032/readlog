@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
-import { UserRepository  } from './repository';
+import { UserRepository  } from './userRepository';
 import { UserInsert, UserUpdate, UserSelect } from '../../database/types';
-import { CreateUserDto,UpdateUserDto, UserListOptions, PaginatedUsers } from './dto';
+import { CreateUserDto,UpdateUserDto, UserListOptions, PaginatedUsers } from './userDto';
 
 
 export class UserService {

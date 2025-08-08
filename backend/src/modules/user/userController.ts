@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { UserService } from './service';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { UserService } from './userService';
+import { CreateUserDto, UpdateUserDto } from './userDto';
 import { UserRole } from '../../database/types';
 
 export class UserController {

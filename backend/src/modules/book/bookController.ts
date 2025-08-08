@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { BookService } from './service';
-import { CreateBookDto, UpdateBookDto, BookListOptions } from './dto';
+import { BookService } from './bookService';
+import { CreateBookDto, UpdateBookDto, BookListOptions } from './bookDto';
 import { success } from '../../utils/api-response';
 
 export class BookController {

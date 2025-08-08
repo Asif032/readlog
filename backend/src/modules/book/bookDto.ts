@@ -1,5 +1,5 @@
 import { BookSelect, Genre } from "../../database/types";
-import { CreateAuthorDto } from "../author/dto";
+import { CreateAuthorDto } from "../author/authorDto";
 
 export interface CreateBookDto {
   title: string;

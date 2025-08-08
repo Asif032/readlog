@@ -10,9 +10,9 @@ export const swaggerSpec = swaggerJSDoc({
     },
     servers: [
       {
-        url: 'http://localhost:8080'
+        url: 'http://localhost:8080/api/v1'
       },
     ],
   },
-  apis: ['./src/modules/**/routes.ts'],
+  apis: ['./src/modules/**/*Routes.ts'],
 });

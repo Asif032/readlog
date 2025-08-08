@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { AuthorService } from './service';
-import { CreateAuthorDto, UpdateAuthorDto } from './dto';
+import { AuthorService } from './authorService';
+import { CreateAuthorDto, UpdateAuthorDto } from './authorDto';
 import { success } from '../../utils/api-response';
 
 export class AuthorController {
