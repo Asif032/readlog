@@ -1,8 +1,5 @@
 import { Router } from 'express';
-import { bookService } from '../../container';
-import { BookController } from './controller';
-
-const bookController = new BookController(bookService);
+import { bookController } from '../../container';
 
 const router = Router();
 

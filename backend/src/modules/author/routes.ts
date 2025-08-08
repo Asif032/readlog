@@ -1,8 +1,5 @@
 import { Router } from 'express';
-import { authorService } from '../../container';
-import { AuthorController } from './controller';
-
-const authorController = new AuthorController(authorService);
+import { authorController } from '../../container';
 
 const router = Router();
 

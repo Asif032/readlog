@@ -5,6 +5,9 @@ import { BookRepository } from './modules/book/repository';
 import { BookService } from './modules/book/service';
 import { UserRepository } from './modules/user/repository';
 import { UserService } from './modules/user/service';
+import { AuthorController } from './modules/author/controller';
+import { BookController } from './modules/book/controller';
+import { UserController } from './modules/user/controller';
 
 // Repositories
 export const userRepository = new UserRepository(db);
@@ -19,3 +22,8 @@ export const bookService = new BookService(
   bookRepository,
   authorService
 );
+
+// Controllers
+export const authorController = new AuthorController(authorService);
+export const bookController = new BookController(bookService);
+export const userController = new UserController(userService);
